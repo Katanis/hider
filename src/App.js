@@ -1,21 +1,16 @@
-import React, { Component } from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  Button
-} from 'react-native';
-import { handleFbLogin } from './lib/auth';
+import React, {Component} from 'react';
+import {StyleSheet, Text, View, Button} from 'react-native';
+import {handleFbLogin} from './lib/auth';
 
 export default class App extends Component<{}> {
   render() {
     return (
       <View style={styles.container}>
-      <Button
-        onPress={handleFbLogin}
-        title="Sign in with facebook dude"
-        color="#3c50e8"
-      />
+        <Button
+          onPress={handleFbLogin}
+          title="Sign in with facebook dude"
+          color="#3c50e8"
+        />
       </View>
     );
   }
@@ -26,5 +21,5 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#F5FCFF',
-  }
+  },
 });

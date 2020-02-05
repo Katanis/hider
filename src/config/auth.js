@@ -1,14 +1,17 @@
-import { FBLoginManager } from 'react-native-facebook-login';
+import {FBLoginManager} from 'react-native-facebook-login';
 const Facebook = {
-  login: (permissions) => {
+  login: permissions => {
     return new Promise((resolve, reject) => {
-      FBLoginManager.loginWithPermissions(permissions || ['email'], (error, data) => {
-        if (!error) {
-          resolve(data.credentials.token);
-        } else {
-          reject(error);
-        }
-      });
+      FBLoginManager.loginWithPermissions(
+        permissions || ['email'],
+        (error, data) => {
+          if (!error) {
+            resolve(data.credentials.token);
+          } else {
+            reject(error);
+          }
+        },
+      );
     });
   },
   logout: () => {
@@ -21,7 +24,7 @@ const Facebook = {
         }
       });
     });
-  }
-}
-const Auth = { Facebook };
+  },
+};
+const Auth = {Facebook};
 export default Auth;
