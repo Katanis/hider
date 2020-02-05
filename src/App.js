@@ -8,7 +8,7 @@ export default class App extends Component<{}> {
       <View style={styles.container}>
         <Button
           onPress={handleFbLogin}
-          title="Sign in with facebook dude"
+          title="Sign in with facebook"
           color="#3c50e8"
         />
       </View>
