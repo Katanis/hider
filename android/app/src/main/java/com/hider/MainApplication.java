@@ -5,6 +5,7 @@ import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
+import com.facebook.reactnative.androidsdk.FBSDKPackage;
 import io.invertase.firebase.RNFirebasePackage;
 import io.invertase.firebase.auth.RNFirebaseAuthPackage;
 
@@ -12,7 +13,7 @@ import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
-import com.magus.fblogin.FacebookLoginPackage;
+//import com.magus.fblogin.FacebookLoginPackage;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
@@ -35,9 +36,10 @@ public class MainApplication extends Application implements ReactApplication {
 //          return packages;
             return Arrays.<ReactPackage>asList(
                     new MainReactPackage(),
+                    new FBSDKPackage(),
                     new RNFirebasePackage(),// firebase package
-                    new RNFirebaseAuthPackage(), // firebase auth package
-                    new FacebookLoginPackage()
+                    new RNFirebaseAuthPackage() // firebase auth package
+//                    new FacebookLoginPackage()
             );
         }
 

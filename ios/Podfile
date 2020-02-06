@@ -36,6 +36,8 @@ target 'hider' do
 
   pod 'RNFirebase', :path => '../node_modules/react-native-firebase'
 
+  pod 'react-native-fbsdk', :path => '../node_modules/react-native-fbsdk'
+
   target 'hiderTests' do
     inherit! :search_paths
     # Pods for testing
