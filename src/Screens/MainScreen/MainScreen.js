@@ -1,36 +1,77 @@
-import React, {Component} from 'react';
+// import React, {Component} from 'react';
 import {StyleSheet, Text, View, Button} from 'react-native';
-import {handleFbLogin} from './lib/auth';
+// import {handleFbLogin} from './lib/auth';
 
-class HomeScreen extends React.Component {
-  static navigationOptions = {
-    title: 'Welcome',
-  };
+import React, {Component} from 'react';
+// import {View} from 'react-native';
+import {AccessToken, LoginManager, LoginButton} from 'react-native-fbsdk';
+import firebase from 'react-native-firebase';
+import {NavigationEvents} from 'react-navigation';
+
+export default class App extends Component {
+  constructor(props) {
+    super(props);
+    // Don't call this.setState() here!
+    this.facebookLogin = this.facebookLogin.bind(this);
+  }
+
+  async facebookLogin() {
+    LoginManager.logOut();
+    try {
+      const result = await LoginManager.logInWithPermissions([
+        'public_profile',
+        'email',
+      ]);
+
+      if (result.isCancelled) {
+        // handle this however suites the flow of your app
+        throw new Error('User cancelled request');
+      }
+
+      console.log(
+        `Login success with permissions: ${result.grantedPermissions.toString()}`,
+      );
+
+      // get the access token
+      const data = await AccessToken.getCurrentAccessToken();
+
+      if (!data) {
+        // handle this however suites the flow of your app
+        throw new Error(
+          'Something went wrong obtaining the users access token',
+        );
+      }
+
+      // create a new firebase credential with the token
+      const credential = firebase.auth.FacebookAuthProvider.credential(
+        data.accessToken,
+      );
+
+      // login with credential
+      const firebaseUserCredential = await firebase
+        .auth()
+        .signInWithCredential(credential);
+
+      console.warn(JSON.stringify(firebaseUserCredential.user.toJSON()));
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
   render() {
     const {navigate} = this.props.navigation;
     return (
-      <View style={styles.container}>
+      <View>
         <Button
-          onPress={handleFbLogin}
+          onPress={this.facebookLogin}
           title="Sign in with facebook"
           color="#3c50e8"
         />
         <Button
-          title="Go to Jane's profile"
-          onPress={() => navigate('Profile', {name: 'Jane'})}
+          title="SIGN IN EXAMPLE"
+          onPress={() => navigate('Profile', {name: 'MyProfile'})}
         />
       </View>
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-});
-
-export default HomeScreen;
