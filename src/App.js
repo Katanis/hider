@@ -66,6 +66,7 @@ export default class App extends Component {
           title="Sign in with facebook"
           color="#3c50e8"
         />
+        <Button title="SIGN IN EXAMPLE"></Button>
       </View>
       // <View>
       //   <LoginButton
