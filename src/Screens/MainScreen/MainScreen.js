@@ -61,7 +61,7 @@ export default class App extends Component {
   render() {
     const {navigate} = this.props.navigation;
     return (
-      <View>
+      <View style={{backgroundColor: '#182343', height: '100%'}}>
         <Button
           onPress={this.facebookLogin}
           title="Sign in with facebook"
@@ -70,6 +70,10 @@ export default class App extends Component {
         <Button
           title="SIGN IN EXAMPLE"
           onPress={() => navigate('Profile', {name: 'MyProfile'})}
+        />
+        <Button
+          title="Find your afair"
+          onPress={() => navigate('SwipeScreen', {name: 'SwipeScreen'})}
         />
       </View>
     );
