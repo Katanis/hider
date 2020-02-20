@@ -11,6 +11,7 @@ import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
 import com.facebook.reactnative.androidsdk.FBSDKPackage;
 import io.invertase.firebase.RNFirebasePackage;
 import io.invertase.firebase.auth.RNFirebaseAuthPackage;
+import io.invertase.firebase.database.RNFirebaseDatabasePackage;
 
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
@@ -38,13 +39,14 @@ public class MainApplication extends Application implements ReactApplication {
 //          // packages.add(new MyReactNativePackage());
 //          return packages;
             return Arrays.<ReactPackage>asList(
-                    new MainReactPackage(),
-            new RNCViewPagerPackage(),
-            new SafeAreaContextPackage(),
-            new RNGestureHandlerPackage(),
-                    new FBSDKPackage(),
-                    new RNFirebasePackage(),// firebase package
-                    new RNFirebaseAuthPackage() // firebase auth package
+              new MainReactPackage(),
+              new RNCViewPagerPackage(),
+              new SafeAreaContextPackage(),
+              new RNGestureHandlerPackage(),
+              new FBSDKPackage(),
+              new RNFirebasePackage(),// firebase package
+              new RNFirebaseAuthPackage(), // firebase auth package
+              new RNFirebaseDatabasePackage()
 //                    new FacebookLoginPackage()
             );
         }
