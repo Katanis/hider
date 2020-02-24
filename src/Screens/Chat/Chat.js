@@ -2,12 +2,8 @@ import React, { Component } from 'react';
 import { View, Text, Image, TextInput, Button, Picker } from 'react-native';
 import firebase from 'react-native-firebase';
 
-var config = {
-  apiKey: 'AIzaSyCLeWLVP6O0TnSfDCbwdmUV2mt-beHKA-0',
-  authDomain: 'hider-f92b1.firebaseapp.com',
-  databaseURL: 'https://hider-f92b1.firebaseio.com',
-  storageBucket: 'bucket.appspot.com',
-};
+import { GiftedChat } from 'react-native-gifted-chat';
+
 // firebase.initializeApp(config);
 firebase.app();
 
@@ -15,31 +11,21 @@ class Chat extends Component {
   constructor(props) {
     super(props);
     // Don't call this.setState() here!
-    this.state = { userId: '', message: '', messages: [] };
+    this.state = { userId: '', message: '', messages: [], chats: [] };
     // this.handleClick = this.handleClick.bind(this);
     this.sendMessage = this.sendMessage.bind(this);
-    this.getMessages = this.getMessages.bind(this);
+    this.getChats = this.getChats.bind(this);
   }
 
   componentDidMount() {
-    let database = firebase.database();
     var _userId = firebase.auth().currentUser.uid;
-    firebase
-      .database()
-      .ref('/users/' + _userId)
-      .once('value')
-      .then(function(snapshot) {
-        var username =
-          (snapshot.val() && snapshot.val().username) || 'Anonymous';
-        // ...
-      });
 
     this.setState({ userId: _userId });
 
-    this.getMessages(_userId);
+    this.getChats(_userId);
   }
 
-  sendMessage(message) {
+  sendMessage = message => {
     firebase
       .database()
       .ref('messages/' + this.state.userId + '/m' + Date.now())
@@ -49,21 +35,20 @@ class Chat extends Component {
         timestamp: Date.now(),
       });
     console.log(message);
-  }
+  };
 
-  getMessages(_userId) {
-    var readedData = firebase.database().ref('messages/' + _userId);
-    readedData.on('value', function(snapshot) {
-      // this.setState({ messages: snapshot.val() });
-      // this.setState(postElement, snapshot.val());
+  getChats = _userId => {
+    var readedData = firebase.database().ref('chats/');
+    readedData.on('value', snapshot => {
+      this.setState({ chats: snapshot.val() });
     });
-  }
+  };
 
   render() {
     return (
       <View>
         <Text>{this.state.user}</Text>
-        <Text>{JSON.stringify(this.state.messages)}</Text>
+        <Text>{JSON.stringify(this.state.chats)}</Text>
         <TextInput onChangeText={text => this.setState({ message: text })} />
         <Button
           title="Send"
