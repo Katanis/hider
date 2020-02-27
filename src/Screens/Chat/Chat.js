@@ -44,11 +44,31 @@ class Chat extends Component {
     });
   };
 
+  getMessages = _chatId => {
+    var query = firebase
+      .database()
+      .ref('chats/' + _chatId + '/messages/')
+      .orderByKey();
+    query.once('value').then(function(snapshot) {
+      snapshot.forEach(function(childSnapshot) {
+        // key will be "ada" the first time and "alan" the second time
+        var key = childSnapshot.key;
+        // childData will be the actual contents of the child
+        var childData = childSnapshot.val();
+        console.log(childData);
+      });
+    });
+  };
+
   render() {
+    const { params } = this.props.navigation.state;
+    let data = params ? params.data : null;
+    this.getMessages(data);
+
     return (
       <View>
-        <Text>{this.state.user}</Text>
-        <Text>{JSON.stringify(this.state.chats)}</Text>
+        <Text>Chat ID: {data}</Text>
+        <Text>{JSON.stringify(data)}</Text>
         <TextInput onChangeText={text => this.setState({ message: text })} />
         <Button
           title="Send"

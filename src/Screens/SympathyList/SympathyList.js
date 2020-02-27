@@ -1,10 +1,13 @@
-import React, { Component } from 'react';
+import React, { Component, isValidElement } from 'react';
 import {
-  View,
-  ScrollView,
-  Image,
-  Text,
+  SafeAreaView,
+  TouchableOpacity,
   TouchableHighlight,
+  FlatList,
+  StyleSheet,
+  Text,
+  View,
+  Image,
 } from 'react-native';
 import firebase from 'react-native-firebase';
 
@@ -24,8 +27,11 @@ class SympathyList extends Component {
   }
 
   getChats = _userId => {
-    var readedData = firebase.database().ref('chats/');
-    readedData.on('value', snapshot => {
+    var readedData = firebase
+      .database()
+      .ref('chats')
+      .orderByKey();
+    readedData.once('value', snapshot => {
       this.setState({ chats: snapshot.val() });
       console.log(this.state.chats);
     });
@@ -36,99 +42,117 @@ class SympathyList extends Component {
     console.log('chats: ' + this.state.chats);
     let allChats = Object.keys(this.state.chats).map(key => key);
 
-    return (
-      <ScrollView style={{ backgroundColor: '#182343', height: '100%' }}>
-        {console.log(
-          'Chat before map ' + allChats + ' length :' + allChats.length,
-        )}
-        {allChats.length > 0 ? (
-          allChats.map(rez => {
-            {
-              console.log('inside loop');
-            }
-            <View
-              style={{
-                borderColor: 'gray',
-                borderWidth: 1,
-                flexDirection: 'row',
-                backgroundColor: 'white',
-                margin: 10,
-                height: 70,
-              }}
-            >
-              <Image
-                style={{ height: 50, width: 50 }}
-                source={{
-                  uri: 'https://facebook.github.io/react/logo-og.png',
-                }}
-              />
-              <Text style={{ padding: 12 }}>Persons Name</Text>
-              <TouchableHighlight
-                style={{ right: 0, position: 'absolute' }}
-                title="Chat"
-                onPress={() => navigate('Chat', { name: 'Chat' })}
-              >
-                <Text
-                  style={{
-                    color: 'white',
-                    backgroundColor: 'orange',
-                    height: 50,
-                    alignContent: 'center',
-                    padding: 12,
-                    borderColor: '#182343',
-                    borderWidth: 2,
-                    borderRadius: 5,
-                  }}
-                >
-                  Chat
-                </Text>
-              </TouchableHighlight>
-            </View>;
-          })
-        ) : (
-          <Text>Nepaejo</Text>
-        )}
-      </ScrollView>
-    );
+    return <ListItems navigate={navigate} data={allChats} />;
   }
 }
 
 export default SympathyList;
 
-// <View
-//               style={{
-//                 borderColor: 'gray',
-//                 borderWidth: 1,
-//                 flexDirection: 'row',
-//                 backgroundColor: 'white',
-//                 margin: 10,
-//               }}
-//             >
-//               <Image
-//                 style={{ height: 50, width: 50 }}
-//                 source={{
-//                   uri: 'https://facebook.github.io/react/logo-og.png',
-//                 }}
-//               />
-//               <Text style={{ padding: 12 }}>Persons Name</Text>
-//               <TouchableHighlight
-//                 style={{ right: 0, position: 'absolute' }}
-//                 title="Chat"
-//                 onPress={() => navigate('Chat', { name: 'Chat' })}
-//               >
-//                 <Text
-//                   style={{
-//                     color: 'white',
-//                     backgroundColor: 'orange',
-//                     height: 50,
-//                     alignContent: 'center',
-//                     padding: 12,
-//                     borderColor: '#182343',
-//                     borderWidth: 2,
-//                     borderRadius: 5,
-//                   }}
-//                 >
-//                   Chat
-//                 </Text>
-//               </TouchableHighlight>
-//             </View>;
+const DATA = [
+  {
+    id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
+    title: 'First Item',
+  },
+  {
+    id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
+    title: 'Second Item',
+  },
+  {
+    id: '58694a0f-3da1-471f-bd96-145571e29d72',
+    title: 'Third Item',
+  },
+];
+
+function Item({ id, title, selected, onSelect, navigate, data }) {
+  return (
+    <View
+      style={{
+        borderColor: 'gray',
+        borderWidth: 1,
+        flexDirection: 'row',
+        backgroundColor: 'white',
+        margin: 10,
+      }}
+    >
+      <Image
+        style={{ height: 50, width: 50 }}
+        source={{
+          uri: 'https://facebook.github.io/react/logo-og.png',
+        }}
+      />
+      <Text style={{ padding: 12 }}>{title}</Text>
+      <TouchableHighlight
+        style={{ right: 0, position: 'absolute' }}
+        title="Chat"
+        onPress={() => navigate('Chat', { name: 'Chat', data: data })}
+      >
+        <Text
+          style={{
+            color: 'white',
+            backgroundColor: 'orange',
+            height: 50,
+            alignContent: 'center',
+            padding: 12,
+            borderColor: '#182343',
+            borderWidth: 2,
+            borderRadius: 5,
+          }}
+        >
+          Chat
+        </Text>
+      </TouchableHighlight>
+    </View>
+  );
+}
+
+const ListItems = props => {
+  const [selected, setSelected] = React.useState(new Map());
+
+  const onSelect = React.useCallback(
+    id => {
+      const newSelected = new Map(selected);
+      newSelected.set(id, !selected.get(id));
+
+      setSelected(newSelected);
+    },
+    [selected],
+  );
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <FlatList
+        data={props.data}
+        renderItem={({ item }) => (
+          <Item
+            id={item.id}
+            title={item}
+            selected={!!selected.get(item.id)}
+            onSelect={onSelect}
+            navigate={props.navigate}
+            data={item}
+          />
+        )}
+        keyExtractor={item => item.id}
+        extraData={selected}
+      />
+    </SafeAreaView>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#182343',
+    height: '100%',
+    // marginTop: Constants.statusBarHeight,
+  },
+  item: {
+    backgroundColor: '#f9c2ff',
+    padding: 20,
+    marginVertical: 8,
+    marginHorizontal: 16,
+  },
+  title: {
+    fontSize: 32,
+  },
+});
