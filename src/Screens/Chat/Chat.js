@@ -1,9 +1,18 @@
 import React, { Component } from 'react';
-import { View, Text, Image, TextInput, Button, Picker } from 'react-native';
+import {
+  View,
+  Text,
+  Image,
+  TextInput,
+  Button,
+  SafeAreaView,
+  FlatList,
+  StyleSheet,
+} from 'react-native';
 import firebase from 'react-native-firebase';
+import FirebaseConf from '../../config/firebase';
 
 import { GiftedChat } from 'react-native-gifted-chat';
-
 // firebase.initializeApp(config);
 firebase.app();
 
@@ -11,40 +20,33 @@ class Chat extends Component {
   constructor(props) {
     super(props);
     // Don't call this.setState() here!
-    this.state = { userId: '', message: '', messages: [], chats: [] };
+    this.state = {
+      userId: '',
+      message: '',
+      messages: [],
+      chats: [],
+      chatId: '',
+      chatIdChanged: false,
+    };
     // this.handleClick = this.handleClick.bind(this);
-    this.sendMessage = this.sendMessage.bind(this);
-    this.getChats = this.getChats.bind(this);
+    //this.sendMessage = this.sendMessage.bind(this);
+    //this.getChats = this.getChats.bind(this);
+    this.getMessages = this.getMessages.bind(this);
+  }
+
+  get user() {
+    return {
+      name: 'Emilis',
+      _id: firebase.auth().currentUser.uid,
+    };
   }
 
   componentDidMount() {
     var _userId = firebase.auth().currentUser.uid;
-
-    this.setState({ userId: _userId });
-
-    this.getChats(_userId);
   }
 
-  sendMessage = message => {
-    firebase
-      .database()
-      .ref('messages/' + this.state.userId + '/m' + Date.now())
-      .set({
-        message: message,
-        name: 'testName',
-        timestamp: Date.now(),
-      });
-    console.log(message);
-  };
-
-  getChats = _userId => {
-    var readedData = firebase.database().ref('chats/');
-    readedData.on('value', snapshot => {
-      this.setState({ chats: snapshot.val() });
-    });
-  };
-
-  getMessages = _chatId => {
+  getMessages = (_chatId, messages) => {
+    let _messages = [];
     var query = firebase
       .database()
       .ref('chats/' + _chatId + '/messages/')
@@ -55,28 +57,90 @@ class Chat extends Component {
         var key = childSnapshot.key;
         // childData will be the actual contents of the child
         var childData = childSnapshot.val();
-        console.log(childData);
+        console.log('MY MESSAGE : ' + JSON.stringify(childData));
+        // Object.assign(messages, childData);
+        _messages.push(childData);
+        this.setState({ messages: _messages });
+        console.log(JSON.stringify(_messages));
+
+        //DESTUKTURIZUOTI VIDUJE IR SUSIKURTI OBJEKTA PANASU I PAVIZDZIO
       });
     });
+
+    this.setState({ messages: _messages });
+    console.log(
+      'Sudarytas zinuciu objektas ' + JSON.stringify(this.state.messages),
+    );
   };
+
+  onSend(messages = []) {
+    this.setState(previousState => ({
+      messages: GiftedChat.append(previousState.messages, messages),
+    }));
+  }
 
   render() {
     const { params } = this.props.navigation.state;
     let data = params ? params.data : null;
-    this.getMessages(data);
+    // console.log(data);
+    if (!this.state.chatIdChanged) {
+      console.log('I am inside IF STATEMENT');
+      this.setState({ chatId: data, chatIdChanged: true });
+      FirebaseConf.shared.setChatId(data);
+      this.getMessages(data, this.state.messages);
+      FirebaseConf.shared.on(message => {
+        this.setState(previousState => ({
+          messages: GiftedChat.append(previousState.messages, message),
+        }));
+      });
+    }
 
     return (
-      <View>
-        <Text>Chat ID: {data}</Text>
-        <Text>{JSON.stringify(data)}</Text>
-        <TextInput onChangeText={text => this.setState({ message: text })} />
-        <Button
-          title="Send"
-          onPress={() => this.sendMessage(this.state.message)}
-        />
-      </View>
+      <GiftedChat
+        messages={this.state.messages}
+        user={this.user}
+        onSend={messages =>
+          FirebaseConf.shared.send(messages, this.state.chatId)
+        }
+        showUserAvatar={true}
+      />
     );
   }
 }
 
 export default Chat;
+
+// const Item = ({ title }) => {
+//   return (
+//     <View style={styles.item}>
+//       <Text style={styles.title}>{title}</Text>
+//     </View>
+//   );
+// };
+
+// const ChatList = props => {
+//   return (
+//     <SafeAreaView style={styles.container}>
+//       <FlatList
+//         data={props.data}
+//         renderItem={({ item }) => <Item title={item.title} />}
+//         keyExtractor={item => item.id}
+//       />
+//     </SafeAreaView>
+//   );
+// };
+
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//   },
+//   item: {
+//     backgroundColor: '#f9c2ff',
+//     padding: 20,
+//     marginVertical: 8,
+//     marginHorizontal: 16,
+//   },
+//   title: {
+//     fontSize: 32,
+//   },
+// });
