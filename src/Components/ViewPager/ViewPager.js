@@ -40,6 +40,8 @@ const MyPager = props => {
             style={{ width: '100%', height: '100%' }}
           />
         </TouchableHighlight>
+        {/* TODO ON press yes or no it should get another person data, if there is no other person it 
+        should say no users right now awailable, else if its a match and message should be allerted */}
         <View style={{ flexDirection: 'row' }}>
           <TouchableHighlight onPress={() => alert('no')}>
             <Text style={{ height: '100%', padding: 50 }}>Not For Me</Text>
@@ -47,9 +49,6 @@ const MyPager = props => {
           <TouchableHighlight onPress={() => alert('Yes')}>
             <Text style={{ height: '100%', padding: 50 }}>Send Love</Text>
           </TouchableHighlight>
-          {/* <Button style={{flex: 1, width: '50%'}} title="Maybe not" />
-          <Button style={{flex: 1, width: '50%'}} title="Afair ;)" /> */}
-          {/* if its a match redirect to another screen */}
         </View>
       </View>
       <View key="2">

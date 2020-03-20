@@ -109,38 +109,3 @@ class Chat extends Component {
 }
 
 export default Chat;
-
-// const Item = ({ title }) => {
-//   return (
-//     <View style={styles.item}>
-//       <Text style={styles.title}>{title}</Text>
-//     </View>
-//   );
-// };
-
-// const ChatList = props => {
-//   return (
-//     <SafeAreaView style={styles.container}>
-//       <FlatList
-//         data={props.data}
-//         renderItem={({ item }) => <Item title={item.title} />}
-//         keyExtractor={item => item.id}
-//       />
-//     </SafeAreaView>
-//   );
-// };
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//   },
-//   item: {
-//     backgroundColor: '#f9c2ff',
-//     padding: 20,
-//     marginVertical: 8,
-//     marginHorizontal: 16,
-//   },
-//   title: {
-//     fontSize: 32,
-//   },
-// });

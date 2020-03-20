@@ -8,28 +8,28 @@ import Chat from './Screens/Chat/Chat';
 import ProfilePreview from './Screens/ProfilePreview/ProfilePreview';
 
 const MainNavigator = createStackNavigator({
-    Home: {
-        screen: HomeScreen,
-        navigationOptions: {
-            headerShown: false,
-        },
+  Home: {
+    screen: HomeScreen,
+    navigationOptions: {
+      headerShown: false,
     },
-    Profile: { screen: ProfileScreen },
-    SwipeScreen: {
-        screen: Swipe,
-        navigationOptions: {
-            headerShown: false,
-        },
+  },
+  Profile: { screen: ProfileScreen },
+  SwipeScreen: {
+    screen: Swipe,
+    navigationOptions: {
+      headerShown: false,
     },
-    SympathyList: {
-        screen: SympathyList,
-    },
-    Chat: {
-        screen: Chat,
-    },
-    ProfilePreview: {
-        screen: ProfilePreview,
-    },
+  },
+  SympathyList: {
+    screen: SympathyList,
+  },
+  Chat: {
+    screen: Chat,
+  },
+  ProfilePreview: {
+    screen: ProfilePreview,
+  },
 });
 
 const App = createAppContainer(MainNavigator);
