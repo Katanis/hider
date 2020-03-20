@@ -46,7 +46,7 @@ const MyPager = props => {
           <TouchableHighlight onPress={() => alert('no')}>
             <Text style={{ height: '100%', padding: 50 }}>Not For Me</Text>
           </TouchableHighlight>
-          <TouchableHighlight onPress={() => alert('Yes')}>
+          <TouchableHighlight onPress={() => props.addNewMatch('tempuser')}>
             <Text style={{ height: '100%', padding: 50 }}>Send Love</Text>
           </TouchableHighlight>
         </View>
