@@ -15,42 +15,12 @@ class Profile extends React.Component {
     profilePictureUrl: 'https://facebook.github.io/react/logo-og.png',
   };
 
-  RadioButton(props) {
-    return (
-      <View
-        style={[
-          {
-            height: 24,
-            width: 24,
-            borderRadius: 12,
-            borderWidth: 2,
-            borderColor: '#000',
-            alignItems: 'center',
-            justifyContent: 'center',
-          },
-          props.style,
-        ]}
-      >
-        {props.selected ? (
-          <View
-            style={{
-              height: 12,
-              width: 12,
-              borderRadius: 6,
-              backgroundColor: '#000',
-            }}
-          />
-        ) : null}
-      </View>
-    );
-  }
-
   writeDataToFirebase() {
     firebase
       .database()
       .ref('users/' + firebase.auth().currentUser.uid)
       // eslint-disable-next-line prettier/prettier
-      .update({ "nickname": this.state.nickname });
+      .update({ nickname: this.state.nickname });
   }
 
   readUserData() {
@@ -86,7 +56,7 @@ class Profile extends React.Component {
           style={{ width: 150, height: 150 }}
         />
         {/* NICNAME FOR USER */}
-        <View style={{ flexDirection: 'row', paddingTop: 10 }}>
+        {/* <View style={{ flexDirection: 'row', paddingTop: 10 }}>
           <Text style={{ paddingTop: 10, color: '#D85A3A' }}>
             Your nickname:{' '}
           </Text>
@@ -97,7 +67,7 @@ class Profile extends React.Component {
             style={{ width: 100, color: '#D85A3A' }}
             value={this.state.nickname}
           />
-        </View>
+        </View> */}
         {/* DESCRIPTION ABOUT YOUR SELF */}
         <TextInput
           style={{

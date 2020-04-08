@@ -142,6 +142,21 @@ export default class App extends Component {
     }
   }
 
+  async createUserListAndNavigate() {
+    let genderTolook = 'female';
+
+    let data = firebase
+      .database()
+      .ref('users/')
+      .orderByChild('gender')
+      .equalTo(genderTolook);
+    data.once('value', snapshot => {
+      console.log(JSON.stringify(snapshot.val()));
+    });
+    //console.log(JSON.stringify(data));
+    //this.navigate('SwipeScreen', { name: 'SwipeScreen' });
+  }
+
   render() {
     const { navigate } = this.props.navigation;
     return (

@@ -53,24 +53,16 @@ class Chat extends Component {
       .orderByKey();
     query.once('value').then(function(snapshot) {
       snapshot.forEach(function(childSnapshot) {
-        // key will be "ada" the first time and "alan" the second time
         var key = childSnapshot.key;
-        // childData will be the actual contents of the child
         var childData = childSnapshot.val();
         console.log('MY MESSAGE : ' + JSON.stringify(childData));
-        // Object.assign(messages, childData);
         _messages.push(childData);
         this.setState({ messages: _messages });
         console.log(JSON.stringify(_messages));
-
-        //DESTUKTURIZUOTI VIDUJE IR SUSIKURTI OBJEKTA PANASU I PAVIZDZIO
       });
     });
 
     this.setState({ messages: _messages });
-    console.log(
-      'Sudarytas zinuciu objektas ' + JSON.stringify(this.state.messages),
-    );
   };
 
   onSend(messages = []) {
@@ -84,7 +76,7 @@ class Chat extends Component {
     let data = params ? params.data : null;
     // console.log(data);
     if (!this.state.chatIdChanged) {
-      console.log('I am inside IF STATEMENT');
+      // console.log('I am inside IF STATEMENT');
       this.setState({ chatId: data, chatIdChanged: true });
       FirebaseConf.shared.setChatId(data);
       this.getMessages(data, this.state.messages);

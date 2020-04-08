@@ -30,7 +30,8 @@ class SympathyList extends Component {
     var readedData = firebase
       .database()
       .ref('chats')
-      .orderByKey();
+      .orderByChild('members/' + _userId)
+      .equalTo(true);
     readedData.once('value', snapshot => {
       this.setState({ chats: snapshot.val() });
       console.log(this.state.chats);
