@@ -163,7 +163,7 @@ export default class App extends Component {
       <View style={{ backgroundColor: '#182343', height: '100%' }}>
         <Button
           title="Settings"
-          onPress={() => navigate('Profile', { name: 'MyProfile' })}
+          onPress={() => navigate('Profile', { name: 'My Profile' })}
         />
         <View style={{ flex: 1, alignItems: 'center', height: 100 }}>
           <Image

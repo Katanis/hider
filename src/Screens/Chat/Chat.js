@@ -55,10 +55,10 @@ class Chat extends Component {
       snapshot.forEach(function(childSnapshot) {
         var key = childSnapshot.key;
         var childData = childSnapshot.val();
-        console.log('MY MESSAGE : ' + JSON.stringify(childData));
+        // console.log('MY MESSAGE : ' + JSON.stringify(childData));
         _messages.push(childData);
         this.setState({ messages: _messages });
-        console.log(JSON.stringify(_messages));
+        // console.log(JSON.stringify(_messages));
       });
     });
 

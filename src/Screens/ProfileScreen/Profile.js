@@ -7,20 +7,30 @@ import firebase from 'react-native-firebase';
 
 class Profile extends React.Component {
   static navigationOptions = {
-    title: 'Profile',
+    title: 'Profile Settings',
   };
   state = {
     nickname: '',
     id: '',
     profilePictureUrl: 'https://facebook.github.io/react/logo-og.png',
+    userInterest: '',
+    description: '',
   };
+
+  // settingsDataResponse = e => this.setState({ userInterest: e });
+  settingsDataResponse(data) {
+    this.setState({ userInterest: data });
+  }
 
   writeDataToFirebase() {
     firebase
       .database()
       .ref('users/' + firebase.auth().currentUser.uid)
       // eslint-disable-next-line prettier/prettier
-      .update({ nickname: this.state.nickname });
+      .update({
+        userInterest: this.state.userInterest,
+        description: this.state.description,
+      });
   }
 
   readUserData() {
@@ -34,8 +44,10 @@ class Profile extends React.Component {
           id: data.fbid,
           profilePictureUrl: data.profile_picture,
           nickname: data.nickname,
+          userInterest: data.userInterest,
+          description: data.description,
         });
-        console.log(data);
+        // console.log(data);
       });
   }
   componentDidMount() {
@@ -69,6 +81,7 @@ class Profile extends React.Component {
           />
         </View> */}
         {/* DESCRIPTION ABOUT YOUR SELF */}
+        <Text>DESCRIPTION</Text>
         <TextInput
           style={{
             borderColor: '#D85A3A',
@@ -78,7 +91,9 @@ class Profile extends React.Component {
             marginTop: 10,
             color: '#D85A3A',
           }}
-          onChange={input => this.setState({ description: input })}
+          placeholder={this.state.description}
+          onChangeText={input => this.setState({ description: input })}
+          defaultValue={this.state.description}
         />
 
         {/* INTEREST CHOISE */}
@@ -86,7 +101,20 @@ class Profile extends React.Component {
           <Text style={{ paddingTop: 15, color: '#D85A3A' }}>
             What are you in to?
           </Text>
-          <GenderInterest />
+          {/* <GenderInterest settingsDataResponse={this.settingsDataResponse} /> */}
+          <View style={{ width: 150, borderWidth: 1, borderColor: '#D85A3A' }}>
+            <Picker
+              selectedValue={this.state.userInterest}
+              onValueChange={(itemValue, itemIndex) =>
+                this.setState({ userInterest: itemValue })
+              }
+            >
+              <Picker.Item color="#D85A3A" label="Male" value="Male" />
+              <Picker.Item color="#D85A3A" label="Female" value="Female" />
+              <Picker.Item color="#D85A3A" label="Both" value="Both" />
+            </Picker>
+            {/* <Text style={styles.text}>{this.state.user}</Text> */}
+          </View>
         </View>
         {/* SUBMIT BUTTON */}
         <Button

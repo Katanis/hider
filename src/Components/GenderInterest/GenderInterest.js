@@ -12,7 +12,9 @@ class PickerExample extends Component {
       <View style={{ width: 150, borderWidth: 1, borderColor: '#D85A3A' }}>
         <Picker
           selectedValue={this.state.user}
-          onValueChange={this.updateUser(value)}
+          onValueChange={(itemValue, itemIndex) =>
+            this.props.settingsDataResponse(itemValue)
+          }
         >
           <Picker.Item color="#D85A3A" label="Male" value="Male" />
           <Picker.Item color="#D85A3A" label="Female" value="Female" />
