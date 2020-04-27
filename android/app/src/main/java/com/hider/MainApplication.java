@@ -5,6 +5,7 @@ import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
+import com.imagepicker.ImagePickerPackage;
 import com.reactnativecommunity.viewpager.RNCViewPagerPackage;
 import com.th3rdwave.safeareacontext.SafeAreaContextPackage;
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
@@ -40,6 +41,7 @@ public class MainApplication extends Application implements ReactApplication {
 //          return packages;
             return Arrays.<ReactPackage>asList(
               new MainReactPackage(),
+            new ImagePickerPackage(),
               new RNCViewPagerPackage(),
               new SafeAreaContextPackage(),
               new RNGestureHandlerPackage(),

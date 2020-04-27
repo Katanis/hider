@@ -44,6 +44,8 @@ target 'hider' do
 
   pod 'react-native-viewpager', :path => '../node_modules/@react-native-community/viewpager'
 
+  pod 'react-native-image-picker', :path => '../node_modules/react-native-image-picker'
+
   target 'hiderTests' do
     inherit! :search_paths
     # Pods for testing
