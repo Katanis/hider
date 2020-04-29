@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import {
   View,
   Text,
+  Modal,
+  Button,
   Image,
   PanResponder,
   Dimensions,
@@ -24,7 +26,7 @@ class Swipe extends Component {
 
   constructor(props) {
     super(props);
-    this.state = { index: 0 };
+    this.state = { index: 0, modalVisible: false };
     this.position = new Animated.ValueXY();
     this._panResponder = PanResponder.create({
       // Ask to be the responder:
@@ -45,6 +47,7 @@ class Swipe extends Component {
         }
       },
     });
+    // this.ProfilePreview = this.ProfilePreview.bind(this);
   }
 
   // componentDidUpdate(prevProps, prevState, snapshot) {
@@ -84,6 +87,10 @@ class Swipe extends Component {
     }).start();
   }
 
+  setModalVisible(value) {
+    this.setState({ modalVisible: value });
+  }
+
   getCardStyle() {
     const { position } = this;
     const rotate = position.x.interpolate({
@@ -96,23 +103,6 @@ class Swipe extends Component {
       transform: [{ rotate }],
     };
   }
-
-  // renderCardItem = ([key, user], i) => {
-  //   if (!this.props.data.length) {
-  //     return this.props.renderNoMoreCards();
-  //   }
-  //   return i === 0 ? (
-  //     <Animated.View
-  //       key={key}
-  //       style={this.getCardStyle()}
-  //       {...this._panResponder.panHandlers}
-  //     >
-  //       {this.props.renderCard([key, user])}
-  //     </Animated.View>
-  //   ) : (
-  //     <View key={key}>{this.props.renderCard([key, user], i)}</View>
-  //   );
-  // };
 
   renderCards = () => {
     if (this.state.index >= this.props.data.length) {
@@ -132,6 +122,13 @@ class Swipe extends Component {
             {...this._panResponder.panHandlers}
           >
             {this.props.renderCard([key, user])}
+            <ProfilePreview
+              user={user}
+              i={i}
+              modalVisible={this.props.modalVisible}
+              index={this.state.index}
+              setModalVisible={this.props.setModalVisible}
+            />
           </Animated.View>
         );
       }
@@ -142,6 +139,13 @@ class Swipe extends Component {
           style={[styles.cardStyle, { top: 20 * (i - this.state.index) }]}
         >
           {this.props.renderCard([key, user])}
+          <ProfilePreview
+            user={user}
+            i={i}
+            modalVisible={this.props.modalVisible}
+            index={this.state.index}
+            setModalVisible={this.props.setModalVisible}
+          />
         </View>
       );
     });
@@ -151,6 +155,34 @@ class Swipe extends Component {
     return <View>{this.renderCards()}</View>;
   }
 }
+
+const ProfilePreview = props => {
+  let showModal = false;
+  console.log(props.i + ' and ' + props.index);
+  if (props.modalVisible && props.i === props.index) {
+    showModal = true;
+  }
+  return (
+    <Modal
+      animationType="slide"
+      transparent={true}
+      visible={showModal}
+      onRequestClose={() => {
+        alert('closed');
+      }}
+    >
+      <Image
+        source={{ uri: props.user.profile_picture }}
+        style={{ width: '100%', height: 200 }}
+      />
+      {/* TODO RENDER USER PHOTOS HERE */}
+      <Button
+        onPress={() => props.setModalVisible(false)}
+        title="Close preview"
+      />
+    </Modal>
+  );
+};
 
 const styles = {
   detailWrapper: {
