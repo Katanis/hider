@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import firebase from 'react-native-firebase';
 import FirebaseConf from '../../config/firebase';
+import { Bubble } from 'react-native-gifted-chat';
 
 import { GiftedChat } from 'react-native-gifted-chat';
 // firebase.initializeApp(config);
@@ -42,7 +43,7 @@ class Chat extends Component {
   }
 
   componentDidMount() {
-    var _userId = firebase.auth().currentUser.uid;
+    // var _userId = firebase.auth().currentUser.uid;
   }
 
   getMessages = (_chatId, messages) => {
@@ -55,15 +56,26 @@ class Chat extends Component {
       snapshot.forEach(function(childSnapshot) {
         var key = childSnapshot.key;
         var childData = childSnapshot.val();
-        // console.log('MY MESSAGE : ' + JSON.stringify(childData));
         _messages.push(childData);
         this.setState({ messages: _messages });
-        // console.log(JSON.stringify(_messages));
       });
     });
 
-    this.setState({ messages: _messages });
+    // this.setState({ messages: _messages });
   };
+
+  renderBubble(props) {
+    return (
+      <Bubble
+        {...props}
+        wrapperStyle={{
+          right: {
+            backgroundColor: '#182343',
+          },
+        }}
+      />
+    );
+  }
 
   onSend(messages = []) {
     this.setState(previousState => ({
@@ -88,14 +100,26 @@ class Chat extends Component {
     }
 
     return (
-      <GiftedChat
-        messages={this.state.messages}
-        user={this.user}
-        onSend={messages =>
-          FirebaseConf.shared.send(messages, this.state.chatId)
-        }
-        showUserAvatar={true}
-      />
+      <View
+        style={{
+          backgroundColor: '#FFFFFF',
+          flex: 1,
+          borderTopLeftRadius: 20,
+          borderTopRightRadius: 20,
+        }}
+      >
+        <GiftedChat
+          messages={this.state.messages}
+          user={this.user}
+          onSend={messages =>
+            FirebaseConf.shared.send(messages, this.state.chatId)
+          }
+          showUserAvatar={true}
+          placeholder="Type a message..."
+          renderBubble={this.renderBubble}
+          renderUsernameOnMessage={true}
+        />
+      </View>
     );
   }
 }

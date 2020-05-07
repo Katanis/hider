@@ -165,22 +165,38 @@ const ProfilePreview = props => {
   return (
     <Modal
       animationType="slide"
-      transparent={true}
+      transparent={false}
       visible={showModal}
       onRequestClose={() => {
         alert('closed');
       }}
     >
-      <Image
-        source={{ uri: props.user.profile_picture }}
-        style={{ width: '100%', height: 200 }}
-      />
-      {/* TODO RENDER USER PHOTOS HERE */}
-      <Button
-        onPress={() => props.setModalVisible(false)}
-        title="Close preview"
-      />
+      <View>
+        <Image
+          source={{ uri: props.user.profile_picture }}
+          style={{ width: '100%', height: 200, marginTop: 100 }}
+        />
+        <Text>{props.user.username}</Text>
+        <Text>{props.user.description}</Text>
+        {/* TODO RENDER USER PHOTOS HERE */}
+        <ImagesToDisplay images={props.user.images} />
+        <Button
+          onPress={() => props.setModalVisible(false)}
+          title="Close preview"
+        />
+      </View>
     </Modal>
+  );
+};
+
+const ImagesToDisplay = images => {
+  let imagesMap = Object.entries(images.images);
+  return (
+    <View style={styles.container}>
+      {imagesMap.map(([key, value]) => {
+        return <Image style={styles.avatar} key={key} source={value} />;
+      })}
+    </View>
   );
 };
 
@@ -196,6 +212,22 @@ const styles = {
     // height: 100,
     // marginTop: 100,
     width: SCREEN_WIDTH,
+  },
+  modalStyle: {
+    backgroundColor: '#FFFFFF',
+  },
+  avatar: {
+    // borderRadius: 75,
+    width: 50,
+    height: 50,
+    backgroundColor: '#F5FCFF',
+    margin: 10,
+  },
+  container: {
+    flex: 1,
+    flexDirection: 'row',
+    marginBottom: 80,
+    alignItems: 'stretch',
   },
 };
 

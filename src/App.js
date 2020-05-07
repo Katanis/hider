@@ -18,14 +18,62 @@ const MainNavigator = createStackNavigator({
   SwipeScreen: {
     screen: Swipe,
     navigationOptions: {
-      headerShown: false,
+      headerStyle: {
+        backgroundColor: '#182343',
+        height: 80,
+        borderBottomWidth: 0,
+      },
+      headerTitleStyle: {
+        color: '#FB4C61',
+        fontFamily: 'Roboto',
+        fontStyle: 'normal',
+        fontWeight: 'bold',
+        // fontSize: '26px',
+        textTransform: 'uppercase',
+      },
+      cardStyle: { backgroundColor: '#182343' },
+      title: 'SWIPE',
     },
   },
   SympathyList: {
     screen: SympathyList,
+    navigationOptions: {
+      headerStyle: {
+        backgroundColor: '#182343',
+        height: 80,
+        borderBottomWidth: 0,
+      },
+      headerTitleStyle: {
+        color: '#FB4C61',
+        fontFamily: 'Roboto',
+        fontStyle: 'normal',
+        fontWeight: 'bold',
+        // fontSize: '26px',
+        textTransform: 'uppercase',
+      },
+      cardStyle: { backgroundColor: '#182343' },
+      title: 'MESSAGES',
+    },
   },
   Chat: {
     screen: Chat,
+    navigationOptions: {
+      headerStyle: {
+        backgroundColor: '#182343',
+        height: 80,
+        borderBottomWidth: 0,
+      },
+      headerTitleStyle: {
+        color: '#FB4C61',
+        fontFamily: 'Roboto',
+        fontStyle: 'normal',
+        fontWeight: 'bold',
+        // fontSize: '26px',
+        textTransform: 'uppercase',
+      },
+      cardStyle: { backgroundColor: '#182343' },
+      title: 'CHAT',
+    },
   },
   ProfilePreview: {
     screen: ProfilePreview,

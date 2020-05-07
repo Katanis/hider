@@ -91,11 +91,29 @@ addNewChat = async (userId, matchedUserId) => {
     .database()
     .ref('/chats')
     .push({
-      members: { [userId]: true, [matchedUserId]: true },
-      [userId]: { data: user1 },
-      [matchedUserId]: { data: user2 },
+      members: {
+        [userId]: true,
+        [matchedUserId]: true,
+      },
+      [userId]: {
+        username: user1.username,
+        profile_picture: user1.profile_picture,
+      },
+      [matchedUserId]: {
+        username: user2.username,
+        profile_picture: user2.profile_picture,
+      },
     });
 };
+
+// const snapshot = await admin
+//     .database()
+//     .ref('/chats')
+//     .push({
+//       members: { [userId]: true, [matchedUserId]: true },
+//       [userId]: { data: user1 },
+//       [matchedUserId]: { data: user2 },
+//     });
 
 getUserDataById = userId => {
   return admin
