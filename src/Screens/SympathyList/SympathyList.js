@@ -8,23 +8,34 @@ import {
   Text,
   View,
   Image,
+  Alert,
 } from 'react-native';
+import { Icon } from 'react-native-elements';
 import firebase from 'react-native-firebase';
-
+import TwoButtonAlert from '../../Components/Alerts/TwoButtonAlert';
 firebase.app();
 
 class SympathyList extends Component {
   constructor(props) {
     super(props);
-    this.state = { chats: [], usersData: [], userIDs: [] };
+    this.state = { chats: [], usersData: [], userIDs: [], deletedChat: false };
     this.getChats = this.getChats.bind(this);
-    this.deleteAll = this.deleteAll.bind(this);
+    // this.deleteChat = this.deleteChat.bind(this);
   }
 
   componentDidMount() {
     var _userId = firebase.auth().currentUser.uid;
     this.getChats(_userId);
   }
+
+  deleteChat = chatID => () => {
+    const myId = firebase.auth().currentUser.uid;
+    let deleteData = firebase
+      .database()
+      .ref('/chats/' + chatID + '/members/')
+      .remove(myId);
+    // this.setState({ ...this.state, deleteChat: !this.state.deletedChat });
+  };
 
   getChats = _userId => {
     let data;
@@ -45,20 +56,10 @@ class SympathyList extends Component {
           .filter(value => value !== 'messages'),
       );
 
-      // console.log('filtered data: ' + JSON.stringify(data[filtered[0]);
-
       this.setState({ chats: data, usersData: usersData, userIDs: filtered });
       return true;
     });
   };
-
-  async deleteAll(items, _userId) {
-    for (let element of items) {
-      await this.deleteOne(element.members);
-      await this.deleteOne(element._userId);
-    }
-    return items;
-  }
 
   render() {
     const { navigate } = this.props.navigation;
@@ -121,26 +122,58 @@ function Item({
       </Text>
       {/* {console.log('Chat duomenys: ' + JSON.stringify(data))} */}
 
-      <TouchableHighlight
-        style={{ right: 0, position: 'absolute' }}
-        title={data}
-        onPress={() => navigate('Chat', { name: 'Chat', data: data })}
+      {/* <Icon name="event-busy" color="#00aced" /> */}
+      <View
+        style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}
       >
-        <Text
-          style={{
-            color: 'white',
-            backgroundColor: 'orange',
-            height: 50,
-            alignContent: 'center',
-            padding: 12,
-            borderColor: '#182343',
-            borderWidth: 2,
-            borderRadius: 5,
-          }}
+        <TouchableHighlight
+          style={{ width: 65, height: 50 }}
+          title={data}
+          onPress={() => navigate('Chat', { name: 'Chat', data: data })}
         >
-          Chat
-        </Text>
-      </TouchableHighlight>
+          <Text
+            style={{
+              color: 'white',
+              backgroundColor: 'orange',
+              width: 65,
+              height: 50,
+              // alignContent: 'center',
+              padding: 12,
+              borderColor: '#182343',
+              borderWidth: 2,
+              borderRadius: 5,
+            }}
+          >
+            Chat
+          </Text>
+        </TouchableHighlight>
+        <TouchableHighlight
+          style={{ width: 65, height: 50 }}
+          title={data}
+          onPress={() =>
+            TwoButtonAlert({
+              title: 'Do you realy wish to leave conversation?',
+              deleteChat: this.deleteChat(id),
+            })
+          }
+        >
+          <Text
+            style={{
+              color: 'white',
+              backgroundColor: 'orange',
+              width: 65,
+              height: 50,
+              // alignContent: 'center',
+              padding: 12,
+              borderColor: '#182343',
+              borderWidth: 2,
+              borderRadius: 5,
+            }}
+          >
+            delete
+          </Text>
+        </TouchableHighlight>
+      </View>
     </View>
   );
 }
@@ -166,7 +199,7 @@ const ListItems = props => {
         data={props.data}
         renderItem={({ item, index }) => (
           <Item
-            id={item.id}
+            id={item}
             title={props.usersData[item][props.userIDS[index][0]].username}
             selected={!!selected.get(item.id)}
             profile_picture={
@@ -178,7 +211,7 @@ const ListItems = props => {
             key={item}
           />
         )}
-        keyExtractor={item => item.id}
+        keyExtractor={item => item}
         extraData={selected}
       />
     </SafeAreaView>

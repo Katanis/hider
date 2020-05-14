@@ -47,16 +47,7 @@ class Swipe extends Component {
         }
       },
     });
-    // this.ProfilePreview = this.ProfilePreview.bind(this);
   }
-
-  // componentDidUpdate(prevProps, prevState, snapshot) {
-  //   if (prevProps.data !== this.props.data) {
-  //     this.setState({
-  //       index: 0,
-  //     });
-  //   }
-  // }
 
   onSwipeComplete(direction) {
     const { onSwipeLeft, onSwipeRight, data, addNewMatch } = this.props;
@@ -179,7 +170,10 @@ const ProfilePreview = props => {
         <Text>{props.user.username}</Text>
         <Text>{props.user.description}</Text>
         {/* TODO RENDER USER PHOTOS HERE */}
-        <ImagesToDisplay images={props.user.images} />
+        {props.user.images !== undefined ? (
+          <ImagesToDisplay images={props.user.images} />
+        ) : null}
+
         <Button
           onPress={() => props.setModalVisible(false)}
           title="Close preview"

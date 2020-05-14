@@ -1,3 +1,5 @@
+import React, { Component } from 'react';
+import { TouchableHighlight, Text } from 'react-native';
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 import HomeScreen from './Screens/MainScreen/MainScreen';
@@ -28,11 +30,9 @@ const MainNavigator = createStackNavigator({
         fontFamily: 'Roboto',
         fontStyle: 'normal',
         fontWeight: 'bold',
-        // fontSize: '26px',
         textTransform: 'uppercase',
       },
       cardStyle: { backgroundColor: '#182343' },
-      title: 'SWIPE',
     },
   },
   SympathyList: {
@@ -48,7 +48,6 @@ const MainNavigator = createStackNavigator({
         fontFamily: 'Roboto',
         fontStyle: 'normal',
         fontWeight: 'bold',
-        // fontSize: '26px',
         textTransform: 'uppercase',
       },
       cardStyle: { backgroundColor: '#182343' },

@@ -10,7 +10,6 @@ import {
 // import {handleFbLogin} from './lib/auth';
 
 import React, { Component } from 'react';
-// import {View} from 'react-native';
 import { AccessToken, LoginManager, LoginButton } from 'react-native-fbsdk';
 import firebase from 'react-native-firebase';
 import { NavigationEvents } from 'react-navigation';
@@ -28,6 +27,7 @@ export default class App extends Component {
       userPicture: '',
       dataUpdated: false,
       isLoading: true,
+      friends: [],
     };
     this.facebookLogin = this.facebookLogin.bind(this);
     this.userInfo = this.userInfo.bind(this);
@@ -53,8 +53,9 @@ export default class App extends Component {
         result.picture,
         result.id,
         result.gender,
+        result.friends,
       );
-      // alert(result.id);
+      // alert(result.friends);
     }
   }
 
@@ -75,7 +76,7 @@ export default class App extends Component {
 
   userInfo() {
     const infoRequest = new GraphRequest(
-      '/me?fields=id,first_name,picture.type(large),gender,email',
+      '/me?fields=id,first_name,picture.type(large),gender,email,friends',
       null,
       this._responseInfoCallback,
     );
@@ -83,7 +84,7 @@ export default class App extends Component {
   }
 
   //writing user data from facebook to firebase
-  writeUserData(userId, name, email, imageUrl, id, _gender) {
+  writeUserData(userId, name, email, imageUrl, id, _gender, _friends) {
     firebase
       .database()
       .ref('users/' + userId)
@@ -93,6 +94,7 @@ export default class App extends Component {
         profile_picture: imageUrl.data.url,
         fbid: id,
         gender: _gender,
+        friends: _friends,
       });
   }
 
@@ -161,10 +163,6 @@ export default class App extends Component {
     const { navigate } = this.props.navigation;
     return (
       <View style={{ backgroundColor: '#182343', height: '100%' }}>
-        <Button
-          title="Settings"
-          onPress={() => navigate('Profile', { name: 'My Profile' })}
-        />
         <View style={{ flex: 1, alignItems: 'center', height: 100 }}>
           <Image
             style={{ alignContent: 'center', top: 50 }}
@@ -187,7 +185,16 @@ export default class App extends Component {
         ) : (
           <CustomButton
             title="Start Your Adventure"
-            action={() => navigate('SwipeScreen', { name: 'SwipeScreen' })}
+            action={() =>
+              navigate('SwipeScreen', { friends: this.state.friends })
+            }
+          />
+        )}
+        {this.state.userLoggedIn ? null : (
+          <CustomButton
+            style={{ marginTop: 10 }}
+            title="Settings"
+            action={() => navigate('Profile', { name: 'My Profile' })}
           />
         )}
       </View>

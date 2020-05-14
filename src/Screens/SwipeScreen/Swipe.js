@@ -8,16 +8,46 @@ import {
   Modal,
   SafeAreaView,
   TouchableHighlight,
+  ImageBackground,
 } from 'react-native';
 import firebase from 'react-native-firebase';
 import Swipe from '../../Components/SwipeComponent/Swipe';
 import { Card, Button } from 'react-native-elements';
 
-const SwipeScreen = props => {
+function SwipeScreen(props) {
+  SwipeScreen.navigationOptions = {
+    title: 'PEOPLE',
+    headerRight: (
+      <TouchableHighlight
+        onPress={() =>
+          props.navigation.navigate('SympathyList', {
+            name: 'SympathyList',
+          })
+        }
+      >
+        <Text
+          style={{
+            color: '#FB4C61',
+            fontFamily: 'Roboto',
+            fontStyle: 'normal',
+            fontWeight: 'bold',
+            textTransform: 'uppercase',
+            fontSize: 18,
+            paddingRight: 15,
+          }}
+        >
+          Chat
+        </Text>
+      </TouchableHighlight>
+    ),
+  };
   const [users, setUsers] = useState({});
+  const [facebookFriends, setFbFriends] = useState({});
   const [liked, setLiked] = useState(0);
   const [passed, setPassed] = useState(0);
   const [modalVisible, setModalVisible] = useState(false);
+  const [filteredUserList, updateFilteredUserList] = useState([]);
+  // const { friends } = props.route.params;
 
   const addNewMatch = _matchId => {
     firebase
@@ -25,9 +55,14 @@ const SwipeScreen = props => {
       .ref('users/' + firebase.auth().currentUser.uid + '/matches/' + _matchId)
       .set({ matched: true });
   };
+
   useEffect(() => {
     getUsersList();
   }, [getUsersList]);
+
+  useEffect(() => {
+    getFacebookFriends();
+  }, [getFacebookFriends]);
 
   const getUsersList = useCallback(() => {
     const genderTolook = 'female';
@@ -37,40 +72,30 @@ const SwipeScreen = props => {
     });
   }, []);
 
-  const renderCards = ([key, user]) => (
-    <Card title={user.username} titleStyle={{ fontSize: 14 }} key={key}>
-      <View style={{ height: 200 }}>
-        <Image
-          source={{ uri: user.profile_picture }}
-          style={{ width: '100%', height: 200 }}
-        />
-      </View>
-      <Button onPress={() => setModalVisible(true)} title="Preview profile" />
-      <View style={styles.detailWrapper}>
-        <Text>{user.username}</Text>
-        <Text>{user.username}</Text>
-      </View>
-      <Text numberOfLines={4}>{user.username}</Text>
-      {/* <ProfilePreview user={user} /> */}
-    </Card>
-  );
+  const getFacebookFriends = useCallback(() => {
+    const data = firebase
+      .database()
+      .ref('users/' + firebase.auth().currentUser.uid + '/friends/data');
+    data.once('value').then(async snapshot => {
+      setFbFriends(snapshot.val());
+    });
+  }, []);
 
-  const ProfilePreview = user => (
-    <Modal
-      animationType="slide"
-      transparent={true}
-      visible={modalVisible}
-      onRequestClose={() => {
-        alert('closed');
-      }}
-    >
-      <Image
+  const renderCards = ([key, user]) => (
+    <View key={key} style={{ height: 400, margin: 20 }}>
+      <ImageBackground
         source={{ uri: user.profile_picture }}
-        style={{ width: '100%', height: 200 }}
-      />
-      {/* TODO RENDER USER PHOTOS HERE */}
-      <Button onPress={() => setModalVisible(false)} title="Close preview" />
-    </Modal>
+        style={styles.image}
+      >
+        <Text style={styles.textBig}>{user.username + ', ' + user.age}</Text>
+        <Text style={styles.textSmall}>{user.description}</Text>
+        <Button
+          style={{ margin: 20, backgroundColor: '#FFFFFF' }}
+          onPress={() => setModalVisible(true)}
+          title="Preview profile"
+        />
+      </ImageBackground>
+    </View>
   );
 
   const renderNoMoreCards = () => (
@@ -85,27 +110,19 @@ const SwipeScreen = props => {
   );
 
   const userMap = Object.entries(users);
+  let result = [];
+  const fbFr = Object.entries(facebookFriends).map(([key, value]) => {
+    result = userMap.filter(x => !x.some(({ fbid }) => fbid === value.id));
+    console.log(JSON.stringify(value.id));
+  });
+  // console.log('FbFriends: ' + JSON.stringify(fbFr));
+
+  // console.log('USER MAP: ' + JSON.stringify(userMap));
 
   return (
     <SafeAreaView style={styles.container}>
-      <TouchableHighlight
-        style={{ height: '10%' }}
-        onPress={() =>
-          props.navigation.navigate('SympathyList', {
-            name: 'SympathyList',
-          })
-        }
-      >
-        <Text style={{ position: 'absolute', right: 0, padding: 15 }}>
-          Chat
-        </Text>
-      </TouchableHighlight>
-      <View style={styles.statusStyle}>
-        <Text style={{ color: 'red' }}>Passed: {passed}</Text>
-        <Text style={{ color: 'blue' }}>Like: {liked}</Text>
-      </View>
       <Swipe
-        data={userMap}
+        data={result}
         keyProp="jobId"
         onSwipeRight={() => setLiked(liked + 1)}
         onSwipeLeft={() => setPassed(passed + 1)}
@@ -117,19 +134,47 @@ const SwipeScreen = props => {
       />
     </SafeAreaView>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    // alignItems: 'center',
-    // justifyContent: 'center',
   },
   statusStyle: {
     padding: 15,
     flexDirection: 'row',
     justifyContent: 'space-around',
+  },
+  imageContainer: {
+    flex: 1,
+    flexDirection: 'column',
+  },
+  image: {
+    flex: 1,
+    resizeMode: 'cover',
+    justifyContent: 'flex-end',
+    height: 360,
+    borderRadius: 10,
+    overflow: 'hidden',
+  },
+  textBig: {
+    color: '#FFFFFF',
+    textTransform: 'capitalize',
+    fontFamily: 'Roboto',
+    fontStyle: 'normal',
+    fontWeight: '500',
+    fontSize: 20,
+    margin: 5,
+  },
+  textSmall: {
+    color: '#FFFFFF',
+    textTransform: 'capitalize',
+    fontFamily: 'Roboto',
+    fontStyle: 'normal',
+    fontWeight: '500',
+    fontSize: 15,
+    margin: 5,
   },
 });
 
