@@ -5,7 +5,6 @@ import {
   View,
   Text,
   Image,
-  Modal,
   SafeAreaView,
   TouchableHighlight,
   ImageBackground,
@@ -47,7 +46,6 @@ function SwipeScreen(props) {
   const [passed, setPassed] = useState(0);
   const [modalVisible, setModalVisible] = useState(false);
   const [filteredUserList, updateFilteredUserList] = useState([]);
-  // const { friends } = props.route.params;
 
   const addNewMatch = _matchId => {
     firebase
@@ -109,18 +107,29 @@ function SwipeScreen(props) {
     </Card>
   );
 
-  const userMap = Object.entries(users);
+  let userMap = Object.entries(users);
   let result = [];
   const fbFr = Object.entries(facebookFriends).map(([key, value]) => {
     result = userMap.filter(x => !x.some(({ fbid }) => fbid === value.id));
+    userMap = result;
     console.log(JSON.stringify(value.id));
   });
-  // console.log('FbFriends: ' + JSON.stringify(fbFr));
-
-  // console.log('USER MAP: ' + JSON.stringify(userMap));
 
   return (
     <SafeAreaView style={styles.container}>
+      <View style={styles.buttonContainer}>
+        <Image
+          style={styles.imageButton}
+          source={require('../../Images/x_button.png')}
+        />
+        <Image
+          style={styles.imageButton}
+          source={require('../../Images/heart_button.png')}
+        />
+        {/* <View style={styles.xButton} /> */}
+        {/* <View style={styles.heartButton} /> */}
+      </View>
+
       <Swipe
         data={result}
         keyProp="jobId"
@@ -137,6 +146,18 @@ function SwipeScreen(props) {
 }
 
 const styles = StyleSheet.create({
+  imageButton: {
+    width: 50,
+    height: 100,
+  },
+  buttonContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    zIndex: 999,
+    alignItems: 'center',
+    top: 200,
+  },
   container: {
     flex: 1,
     backgroundColor: '#fff',

@@ -1,18 +1,7 @@
-// import React, {Component} from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  Button,
-  TouchableHighlight,
-  Image,
-} from 'react-native';
-// import {handleFbLogin} from './lib/auth';
-
+import { Text, View, TouchableHighlight, Image } from 'react-native';
 import React, { Component } from 'react';
 import { AccessToken, LoginManager, LoginButton } from 'react-native-fbsdk';
 import firebase from 'react-native-firebase';
-import { NavigationEvents } from 'react-navigation';
 
 const FBSDK = require('react-native-fbsdk');
 const { GraphRequest, GraphRequestManager } = FBSDK;
@@ -20,7 +9,6 @@ const { GraphRequest, GraphRequestManager } = FBSDK;
 export default class App extends Component {
   constructor(props) {
     super(props);
-    // Don't call this.setState() here!
     this.state = {
       userLoggedIn: false,
       userdata: '',
@@ -62,10 +50,10 @@ export default class App extends Component {
   componentDidMount() {
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
-        this.setState({ userLoggedIn: false });
+        this.setState({ ...this.state, userLoggedIn: false });
         this.forceUpdate();
       } else {
-        this.setState({ userLoggedIn: true });
+        this.setState({ ...this.state, userLoggedIn: true });
         this.forceUpdate();
       }
     });
@@ -155,8 +143,6 @@ export default class App extends Component {
     data.once('value', snapshot => {
       console.log(JSON.stringify(snapshot.val()));
     });
-    //console.log(JSON.stringify(data));
-    //this.navigate('SwipeScreen', { name: 'SwipeScreen' });
   }
 
   render() {
