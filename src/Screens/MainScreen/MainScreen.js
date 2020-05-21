@@ -171,9 +171,7 @@ export default class App extends Component {
         ) : (
           <CustomButton
             title="Start Your Adventure"
-            action={() =>
-              navigate('SwipeScreen', { friends: this.state.friends })
-            }
+            action={() => navigate('SwipeScreen')}
           />
         )}
         {this.state.userLoggedIn ? null : (

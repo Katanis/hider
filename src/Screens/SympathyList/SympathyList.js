@@ -120,9 +120,6 @@ function Item({
       >
         {title}
       </Text>
-      {/* {console.log('Chat duomenys: ' + JSON.stringify(data))} */}
-
-      {/* <Icon name="event-busy" color="#00aced" /> */}
       <View
         style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}
       >
@@ -137,7 +134,6 @@ function Item({
               backgroundColor: 'orange',
               width: 65,
               height: 50,
-              // alignContent: 'center',
               padding: 12,
               borderColor: '#182343',
               borderWidth: 2,

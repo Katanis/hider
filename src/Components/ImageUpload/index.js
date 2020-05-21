@@ -104,7 +104,10 @@ export default class App extends React.Component {
             ]}
           >
             {this.state.avatarSource === null ? (
-              <Text>Select a Photo</Text>
+              <Image
+                style={{ width: 20, height: 20 }}
+                source={require('../../Images/add_button.png')}
+              />
             ) : (
               <Image style={styles.avatar} source={this.state.avatarSource} />
             )}
@@ -133,22 +136,25 @@ const styles = StyleSheet.create({
     // justifyContent: 'center',
     // alignItems: 'center',
     backgroundColor: '#F5FCFF',
+    width: 50,
+    height: 50,
   },
   avatarContainer: {
     borderColor: '#9B9B9B',
     borderWidth: 1 / PixelRatio.get(),
     justifyContent: 'center',
     alignItems: 'center',
-    width: 100,
-    height: 100,
+    width: 50,
+    height: 50,
   },
   touchableOpacity: {
-    width: 100,
-    height: 100,
+    width: 50,
+    height: 50,
   },
   avatar: {
     // borderRadius: 75,
-    width: 100,
-    height: 100,
+    width: 50,
+    height: 50,
+    borderRadius: 10,
   },
 });

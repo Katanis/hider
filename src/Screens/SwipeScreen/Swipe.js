@@ -18,11 +18,7 @@ function SwipeScreen(props) {
     title: 'PEOPLE',
     headerRight: (
       <TouchableHighlight
-        onPress={() =>
-          props.navigation.navigate('SympathyList', {
-            name: 'SympathyList',
-          })
-        }
+        onPress={() => props.navigation.navigate('SympathyList')}
       >
         <Text
           style={{
@@ -109,7 +105,7 @@ function SwipeScreen(props) {
 
   let userMap = Object.entries(users);
   let result = [];
-  const fbFr = Object.entries(facebookFriends).map(([key, value]) => {
+  Object.entries(facebookFriends).map(([key, value]) => {
     result = userMap.filter(x => !x.some(({ fbid }) => fbid === value.id));
     userMap = result;
     console.log(JSON.stringify(value.id));
@@ -126,8 +122,6 @@ function SwipeScreen(props) {
           style={styles.imageButton}
           source={require('../../Images/heart_button.png')}
         />
-        {/* <View style={styles.xButton} /> */}
-        {/* <View style={styles.heartButton} /> */}
       </View>
 
       <Swipe
